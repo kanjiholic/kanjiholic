@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>漢字ポーカー (Kanji Poker)</title>
+  <title>漢字ポーカー (Kanji Poker) - KANJIHOLIC</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Canvas Confetti for winning celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts: Shippori Mincho for authentic Japanese typography -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Yuji+Syuku&display=swap" rel="stylesheet">
@@ -52,49 +52,27 @@
       user-select: none;
       -webkit-user-select: none;
     }
-
-    /* Card Animations & Hover effects */
     .kanji-card {
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }
-    
     .kanji-card:hover {
       transform: translateY(-8px) scale(1.03);
     }
-
     .kanji-card.selected-exchange {
       transform: translateY(-16px);
       border-color: #e34234 !important;
       box-shadow: 0 0 18px rgba(227, 66, 52, 0.7);
     }
-
     .kanji-card.selected-word {
       transform: translateY(-20px);
       border-color: #d4af37 !important;
       box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
     }
-
-    /* Japanese Washi Texture Overlay */
     .washi-texture {
       background-color: #fbf7ee;
       background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.86 0 7-3.14 7-7s-3.14-7-7-7-7 3.14-7 7 3.14 7 7 7zm48 25c3.86 0 7-3.14 7-7s-3.14-7-7-7-7 3.14-7 7 3.14 7 7 7zm-43-7c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm63 31c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z' fill='%3Cpath%3E' fill-opacity='0.03'/%3E%3C/svg%3E");
     }
-
-    /* Traditional Japanese Border Pattern */
-    .gold-border {
-      border: 2px solid #d4af37;
-      position: relative;
-    }
-    .gold-border::before {
-      content: '';
-      position: absolute;
-      top: 2px; left: 2px; right: 2px; bottom: 2px;
-      border: 1px solid rgba(212, 175, 55, 0.4);
-      pointer-events: none;
-    }
-
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #131b2e; }
     ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
@@ -102,26 +80,24 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between font-sans antialiased overflow-x-hidden">
 
-  <!-- Header / Navigation Bar -->
+  <!-- Header -->
   <header class="w-full bg-indigoDeep/90 border-b border-gold/30 px-4 py-3 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-crimson border border-gold flex items-center justify-center font-kanji text-gold font-bold text-xl shadow-goldGlow">
-          漢
-        </div>
+        <!-- KANJIHOLIC Logo Image Integration -->
+        <img src="KANJIHOLICRAVEN_logo.jpg" alt="KANJIHOLIC Logo" class="w-10 h-10 rounded-full border border-gold/50 shadow-goldGlow object-cover">
         <div>
           <h1 class="text-xl md:text-2xl font-bold font-kanji tracking-wider text-goldLight flex items-center gap-2">
-            漢字ポーカー <span class="text-xs px-2 py-0.5 rounded bg-gold/20 text-gold border border-gold/40">雅</span>
+            漢字ポーカー
           </h1>
-          <p class="text-xs text-slate-400 hidden sm:block">手札の漢字で熟語を作り、最高得点を目指せ！</p>
+          <p class="text-xs text-slate-400 hidden sm:block">手札の漢字から熟語を何個作れるか挑戦しよう！</p>
         </div>
       </div>
 
-      <!-- Action & Modal Buttons -->
-      <div class="flex items-center gap-2 md:gap-4">
-        <button id="soundToggleBtn" onclick="toggleSound()" class="p-2 rounded-lg bg-indigoAccent hover:bg-slate-700 text-gold border border-gold/30 transition flex items-center gap-1 text-xs">
-          <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4"></i>
-          <span class="hidden md:inline" id="soundText">音: ON</span>
+      <div class="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
+        <button onclick="openModal('cardListModal')" class="p-2 rounded-lg bg-indigoAccent hover:bg-slate-700 text-gold border border-gold/30 transition flex items-center gap-1 text-xs">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span class="hidden md:inline">カード一覧</span>
         </button>
         <button onclick="openModal('rulesModal')" class="p-2 rounded-lg bg-indigoAccent hover:bg-slate-700 text-gold border border-gold/30 transition flex items-center gap-1 text-xs">
           <i data-lucide="help-circle" class="w-4 h-4"></i>
@@ -129,7 +105,11 @@
         </button>
         <button onclick="openModal('dictModal')" class="p-2 rounded-lg bg-indigoAccent hover:bg-slate-700 text-gold border border-gold/30 transition flex items-center gap-1 text-xs">
           <i data-lucide="book-open" class="w-4 h-4"></i>
-          <span class="hidden md:inline">辞書・履歴</span>
+          <span class="hidden md:inline">プレイ履歴</span>
+        </button>
+        <button onclick="confirmResetGame()" class="p-2 rounded-lg bg-vermilion/20 hover:bg-vermilion/40 text-red-200 border border-vermilion/50 transition flex items-center gap-1 text-xs">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          <span class="hidden md:inline">はじめからやり直す</span>
         </button>
       </div>
     </div>
@@ -138,78 +118,60 @@
   <!-- Main Game Workspace -->
   <main class="max-w-4xl mx-auto w-full px-4 py-4 md:py-6 flex-1 flex flex-col justify-between gap-6">
 
-    <!-- Score & Status Dashboard -->
+    <!-- Score & Phase Dashboard -->
     <section class="grid grid-cols-3 gap-2 md:gap-4 bg-indigoDeep/80 p-3 md:p-4 rounded-xl border border-gold/30 shadow-lg backdrop-blur-sm">
       <div class="text-center border-r border-slate-700/60">
         <span class="text-xs text-slate-400 block mb-1">現在のスコア</span>
         <span id="scoreDisplay" class="text-2xl md:text-4xl font-extrabold text-gold font-kanji">0</span>
       </div>
       <div class="text-center border-r border-slate-700/60">
-        <span class="text-xs text-slate-400 block mb-1">ラウンド (残り)</span>
-        <span id="roundDisplay" class="text-2xl md:text-4xl font-extrabold text-white font-kanji">1 / 5</span>
+        <span class="text-xs text-slate-400 block mb-1">現在のフェイズ</span>
+        <span id="phaseDisplay" class="text-lg md:text-2xl font-bold text-white font-kanji">交換フェイズ</span>
       </div>
       <div class="text-center">
-        <span class="text-xs text-slate-400 block mb-1">山札残り</span>
-        <span id="deckCountDisplay" class="text-2xl md:text-4xl font-extrabold text-slate-300 font-kanji">65</span>
+        <span class="text-xs text-slate-400 block mb-1">カード交換残り</span>
+        <span id="exchangeCountDisplay" class="text-2xl md:text-4xl font-extrabold text-vermilion font-kanji">2 回</span>
       </div>
     </section>
 
-    <!-- Game Notification / Announcement Banner -->
+    <!-- Announcement Banner -->
     <div id="statusBanner" class="bg-indigoAccent/80 border border-gold/40 text-goldLight text-center py-2 px-4 rounded-lg text-sm font-medium shadow-inner flex items-center justify-center gap-2 min-h-[42px] transition-all">
       <i data-lucide="info" class="w-4 h-4 text-gold flex-shrink-0"></i>
-      <span id="statusMessage">カードを選択して熟語を作るか、不要なカードを選んで交換してください。</span>
-    </div>
-
-    <!-- Mode Selector Tabs (Exchange Mode vs Word Creation Mode) -->
-    <div class="flex justify-center gap-3">
-      <button id="modeWordBtn" onclick="setGameMode('word')" class="flex-1 max-w-[200px] py-2.5 px-4 rounded-lg font-bold text-sm transition-all border flex items-center justify-center gap-2 bg-gold text-indigoDeep border-gold shadow-goldGlow">
-        <i data-lucide="pen-tool" class="w-4 h-4"></i> 熟語作成モード
-      </button>
-      <button id="modeExchangeBtn" onclick="setGameMode('exchange')" class="flex-1 max-w-[200px] py-2.5 px-4 rounded-lg font-bold text-sm transition-all border flex items-center justify-center gap-2 bg-indigoAccent text-slate-300 border-slate-600 hover:border-gold/50">
-        <i data-lucide="refresh-cw" class="w-4 h-4"></i> カード交換 (<span id="exchangeStatusText">交換可能</span>)
-      </button>
+      <span id="statusMessage">交換したいカードを選んで「カードを交換する」を押すか、「交換せずに提出へ」を押してください。</span>
     </div>
 
     <!-- Hand Cards Container -->
-    <div class="my-auto py-4">
+    <div class="my-auto py-2">
       <p id="modeHintText" class="text-center text-xs text-slate-400 mb-3">
-        熟語にする順番にカードをクリックしてください (2〜5文字)
+        交換したいカードを選択してください（最大2回まで交換可能）
       </p>
-      
       <div id="handCardsContainer" class="flex justify-center items-center gap-2 sm:gap-4 md:gap-6 min-h-[170px] sm:min-h-[220px] px-2">
-        <!-- Cards dynamically populated by JS -->
       </div>
     </div>
 
-    <!-- Word Submission Sequence Preview Slot -->
+    <!-- Word Sequence Preview Slot -->
     <div id="wordSequencePreview" class="bg-indigoDeep/90 rounded-xl p-3 border border-gold/20 flex flex-col items-center justify-center min-h-[70px]">
-      <div class="text-xs text-slate-400 mb-1">選択中の文字並び:</div>
+      <div class="text-xs text-slate-400 mb-1" id="sequenceTitleLabel">選択中のカード:</div>
       <div id="selectedSequenceDisplay" class="text-2xl sm:text-3xl font-kanji font-bold text-gold tracking-widest min-h-[36px] flex items-center gap-2">
         <span class="text-slate-600 text-sm font-sans italic">（カードが未選択です）</span>
       </div>
     </div>
 
-    <!-- Primary Action Controls -->
-    <div class="flex justify-center gap-4">
-      <button id="clearSelectionBtn" onclick="clearCardSelection()" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 font-semibold text-sm transition flex items-center gap-1.5">
-        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 選択解除
-      </button>
-      
-      <button id="primaryActionBtn" onclick="executePrimaryAction()" class="px-8 py-3 rounded-xl bg-crimson hover:bg-red-700 text-goldLight border-2 border-gold font-bold text-base shadow-crimsonGlow transition-all flex items-center gap-2 transform active:scale-95">
-        <i data-lucide="check-circle" class="w-5 h-5"></i> 熟語を提出する
-      </button>
+    <!-- Dynamic Action Controls -->
+    <div id="actionControlsContainer" class="flex justify-center items-center gap-3 flex-wrap">
+      <!-- Buttons dynamically updated by JS according to Phase -->
     </div>
 
   </main>
 
-  <!-- Footer Info -->
+  <!-- Footer -->
   <footer class="w-full text-center py-3 text-xs text-slate-500 border-t border-slate-800">
-    漢字ポーカー © 2026 - 完全無料・クライアントサイドWebアプリ
+    漢字ポーカー © 2026 - KANJIHOLIC
   </footer>
 
-  <!-- ================= MODALS ================= -->
+  <!-- MODALS -->
 
-  <!-- 1. Game Rules Modal -->
+  <!-- 1. Rules Modal -->
   <div id="rulesModal" class="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-indigoDeep border-2 border-gold rounded-2xl max-w-lg w-full p-6 text-washi shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal('rulesModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -223,36 +185,29 @@
       <div class="space-y-4 text-sm leading-relaxed text-slate-300">
         <div>
           <h3 class="font-bold text-goldLight mb-1 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-gold"></span> 基本ルール
+            <span class="w-2 h-2 rounded-full bg-gold"></span> ゲームの流れ
           </h3>
-          <p class="text-xs text-slate-300">70枚の山札から配られる5枚の手札を使い、2〜5文字の実在する熟語を作ります。全5ラウンドでの合計スコアを競います。</p>
-        </div>
-
-        <div>
-          <h3 class="font-bold text-goldLight mb-1 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-gold"></span> ラウンドの流れ
-          </h3>
-          <ol class="list-decimal list-inside text-xs space-y-1 pl-1">
-            <li><strong class="text-white">カード交換（任意）:</strong> 不要なカードを選び、各ラウンド1度だけ山札と交換できます。</li>
-            <li><strong class="text-white">熟語作成:</strong> 手札から2〜5文字の熟語になるように順番にカードを選択します。</li>
-            <li><strong class="text-white">提出:</strong> 熟語を提出するとスコアを獲得し、使用した枚数分山札から補充されます。</li>
+          <ol class="list-decimal list-inside text-xs space-y-1.5 text-slate-300">
+            <li><strong>カード交換フェイズ:</strong> 5枚の手札から不要なカードを選び、最大2回まで山札と交換できます（交換しないことも可能）。</li>
+            <li><strong>熟語提出フェイズ:</strong> 確定した5枚の手札から、作成可能な熟語を順番に提出します。<strong>同じカードを何度も使い回して複数の熟語を作ることができます！</strong></li>
+            <li><strong>提出終了:</strong> 熟語を作りきったら「提出を終了する」ボタンを押してゲーム完了です。</li>
           </ol>
         </div>
 
         <div>
           <h3 class="font-bold text-goldLight mb-1 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-gold"></span> 役と得点表
+            <span class="w-2 h-2 rounded-full bg-gold"></span> 役と得点表（更新）
           </h3>
-          <div class="grid grid-cols-2 gap-2 text-xs border border-gold/20 p-2 rounded bg-indigoAccent/50">
+          <div class="grid grid-cols-2 gap-2 text-xs border border-gold/20 p-2.5 rounded bg-indigoAccent/50">
             <div class="flex justify-between border-b border-slate-700 pb-1"><span>2文字熟語:</span> <span class="font-bold text-gold">100 pt</span></div>
-            <div class="flex justify-between border-b border-slate-700 pb-1"><span>3文字熟語:</span> <span class="font-bold text-gold">300 pt</span></div>
-            <div class="flex justify-between"><span>4文字熟語/四字熟語:</span> <span class="font-bold text-gold">1,000 pt</span></div>
-            <div class="flex justify-between"><span>5文字全使用（フルハウス）:</span> <span class="font-bold text-gold">3,000 pt</span></div>
+            <div class="flex justify-between border-b border-slate-700 pb-1"><span>3文字熟語:</span> <span class="font-bold text-gold">500 pt</span></div>
+            <div class="flex justify-between border-b border-slate-700 sm:border-none pb-1"><span>4文字熟語:</span> <span class="font-bold text-gold">1,000 pt</span></div>
+            <div class="flex justify-between"><span>5文字熟語:</span> <span class="font-bold text-gold">10,000 pt</span></div>
           </div>
         </div>
 
         <div class="bg-crimson/20 border border-crimson/40 p-3 rounded-lg text-xs text-red-200">
-          💡 <strong>ヒント:</strong> 4字熟語（「一期一会」「温故知新」など）や5字熟語（全手札使用）を揃えると、大量スコアを獲得できます！
+          💡 <strong>例:</strong> 「青・魚・蝦・竜」があれば、「青魚」「青蝦」「青竜蝦」とカードを繰り返し使って連続で得点できます！
         </div>
       </div>
 
@@ -270,12 +225,11 @@
       </button>
 
       <h2 class="text-2xl font-kanji font-bold text-gold mb-4 flex items-center gap-2 border-b border-gold/30 pb-2">
-        <i data-lucide="book-open" class="w-6 h-6"></i> 作成した熟語履歴
+        <i data-lucide="book-open" class="w-6 h-6"></i> 過去のプレイ履歴
       </h2>
 
-      <div id="historyList" class="space-y-3 max-h-[350px] overflow-y-auto pr-1">
-        <!-- History Items Inserted Here -->
-        <p class="text-xs text-slate-400 text-center py-8">まだ熟語を作成していません。</p>
+      <div id="historyList" class="space-y-4 max-h-[400px] overflow-y-auto pr-1">
+        <p class="text-xs text-slate-400 text-center py-8">まだプレイ履歴がありません。</p>
       </div>
 
       <div class="mt-6 pt-4 border-t border-slate-700 flex justify-between items-center">
@@ -287,190 +241,160 @@
     </div>
   </div>
 
-  <!-- 3. Game Over / Result Modal -->
+  <!-- 3. Card List Modal (NEW) -->
+  <div id="cardListModal" class="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div class="bg-indigoDeep border-2 border-gold rounded-2xl max-w-xl w-full p-6 text-washi shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal('cardListModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <h2 class="text-2xl font-kanji font-bold text-gold mb-2 flex items-center gap-2 border-b border-gold/30 pb-2">
+        <i data-lucide="layers" class="w-6 h-6"></i> 70枚の収録カード一覧
+      </h2>
+      <p class="text-xs text-slate-400 mb-4">全70文字の山札です。文字を組み合わせて熟語を見つけ出しましょう！</p>
+
+      <div id="cardGridContainer" class="grid grid-cols-7 sm:grid-cols-10 gap-2 p-3 bg-indigoAccent/50 rounded-xl border border-gold/20 text-center font-kanji font-bold text-lg text-goldLight">
+        <!-- Dynamically Populated by JS -->
+      </div>
+
+      <button onclick="closeModal('cardListModal')" class="mt-6 w-full py-2.5 rounded-xl bg-gold text-indigoDeep font-bold text-sm hover:bg-goldLight transition">
+        閉じる
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. Result Modal -->
   <div id="resultModal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 hidden backdrop-blur-md">
-    <div class="bg-indigoDeep border-2 border-gold rounded-2xl max-w-md w-full p-6 text-washi shadow-2xl text-center relative">
+    <div class="bg-indigoDeep border-2 border-gold rounded-2xl max-w-md w-full p-6 text-washi shadow-2xl text-center relative max-h-[90vh] overflow-y-auto">
       <div class="w-16 h-16 bg-gold/20 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-3 text-gold">
         <i data-lucide="trophy" class="w-8 h-8"></i>
       </div>
 
-      <h2 class="text-3xl font-kanji font-bold text-gold mb-1">終局（ゲーム終了）</h2>
-      <p class="text-xs text-slate-400 mb-6">全5ラウンドが終了しました</p>
+      <h2 class="text-3xl font-kanji font-bold text-gold mb-1">ゲーム終了！</h2>
+      <p class="text-xs text-slate-400 mb-4">作成した熟語と獲得スコア結果</p>
 
-      <div class="bg-indigoAccent/60 rounded-xl p-4 border border-gold/30 mb-6">
+      <div class="bg-indigoAccent/60 rounded-xl p-4 border border-gold/30 mb-4">
         <span class="text-xs text-slate-400 block mb-1">最終獲得スコア</span>
         <span id="finalScoreDisplay" class="text-4xl font-extrabold text-gold font-kanji">0</span>
         <span class="text-xs text-slate-400 block mt-2" id="highScoreNotice"></span>
       </div>
 
-      <div class="flex gap-3">
-        <button onclick="restartGame()" class="w-full py-3 rounded-xl bg-crimson hover:bg-red-700 text-goldLight font-bold text-base border border-gold shadow-crimsonGlow transition flex items-center justify-center gap-2">
-          <i data-lucide="rotate-ccw" class="w-5 h-5"></i> もう一度遊ぶ
-        </button>
+      <!-- Created Words List Summary -->
+      <div class="mb-6 text-left">
+        <h4 class="text-xs font-bold text-goldLight mb-2 border-b border-gold/20 pb-1">今回作成した熟語一覧:</h4>
+        <div id="resultWordList" class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+          <!-- Populated by JS -->
+        </div>
       </div>
+
+      <button onclick="restartGame()" class="w-full py-3 rounded-xl bg-crimson hover:bg-red-700 text-goldLight font-bold text-base border border-gold shadow-crimsonGlow transition flex items-center justify-center gap-2">
+        <i data-lucide="rotate-ccw" class="w-5 h-5"></i> もう一度遊ぶ
+      </button>
     </div>
   </div>
 
-
-  <!-- ================= JAVASCRIPT GAME ENGINE ================= -->
+  <!-- JAVASCRIPT GAME ENGINE -->
   <script>
-    /* ================= 1. KANJI DECK DATASET (70 Master Cards) ================= */
-    // Richly curated list designed for max word-building flexibility in Japanese
+    /* 1. KANJI DECK DATASET (70 Cards) */
     const KANJI_DECK_MASTER = [
-      "日", "本", "人", "大", "小", "学", "校", "生", "会", "社",
-      "国", "語", "一", "二", "三", "四", "五", "時", "間", "年",
-      "出", "入", "気", "天", "地", "水", "火", "風", "月", "心",
-      "愛", "知", "新", "古", "高", "長", "自", "動", "車", "電",
-      "通", "信", "正", "義", "平", "和", "友", "情", "勝", "利",
-      "成", "功", "開", "発", "文", "化", "理", "解", "不", "可",
-      "能", "現", "実", "夢", "希", "望", "光", "明", "意", "味"
+      "貝", "蕎", "竹", "杖", "肉", "葉", "母", "麦", "葵", "瓜",
+      "雲", "英", "黄", "花", "蝦", "海", "角", "亀", "牛", "魚",
+      "金", "狗", "鶏", "虎", "鼓", "香", "黒", "菜", "三", "山",
+      "蚕", "刺", "子", "糸", "紫", "児", "鹿", "若", "小", "松",
+      "鐘", "人", "水", "雀", "青", "石", "舌", "線", "鼠", "草",
+      "大", "啄", "地", "虫", "鳥", "蹄", "天", "豆", "葱", "馬",
+      "白", "尾", "布", "木", "柳", "楊", "螺", "蘭", "竜", "和"
     ];
 
-    /* ================= 2. CLIENT-SIDE DICTIONARY DATASET ================= */
-    // Built-in offline dictionary (Includes common 2, 3, 4, and 5 kanji compounds)
-    const BUILTIN_DICTIONARY = new Set([
-      // 2-Kanji Words
-      "日本", "本人", "大人", "小人", "大学", "学校", "学生", "社会", "会社", "国語",
-      "一日", "二人", "時間", "年間", "出入", "天気", "天地", "水火", "月日", "開心",
-      "愛知", "新古", "高校", "自重", "電車", "通信", "正義", "平和", "友情", "勝利",
-      "成功", "開発", "文化", "理解", "不可能", "現実", "希望", "光明", "意味", "新車",
-      "自動", "人気", "水気", "火気", "電気", "正解", "古風", "一言", "二言", "三人",
-      "五月", "一年", "二年", "三年", "四時", "五時", "月光", "日光", "愛情", "新春",
-      "勝負", "和風", "同好", "一気", "大火", "小火", "水光", "風火", "信義", "知恵",
-      "知性", "大国", "小国", "入国", "出国", "同会", "大不", "高大", "大不", "発動",
-      "発信", "入社", "退社", "社会", "同情", "同心", "同気", "同情", "同感", "不義",
-      // 3-Kanji Words
-      "小学生", "中学生", "高校生", "大学生", "日本国", "日本人", "新幹線", "自動車",
-      "愛好家", "成功者", "開発者", "不可能", "一人旅", "三ヶ月", "五月雨", "不景気",
-      "新年度", "同好会", "大成功", "文化人", "現実的", "希望光", "正義感", "高能力",
-      // 4-Kanji Words / 四字熟語
-      "一期一会", "温故知新", "試行錯誤", "自画自賛", "電光石火", "完全無欠", "天下統一",
-      "四時五分", "一言一句", "一朝一夕", "自給自足", "不撓不屈", "意志薄弱", "一進一退",
-      "一心同体", "自由平等", "正正堂堂", "光明正大", "喜怒哀楽", "言語道断", "大願成就",
-      "一網打尽", "一石二鳥", "十人十色", "起死回生", "百発百中", "異口同音", "無我夢中",
-      // 5-Kanji Words
-      "日本国憲法", "自動販売機", "個人情報保護", "世界平和会議"
+    /* 2. CUSTOM BUILT-IN DICTIONARY WITH READINGS (Yomi) */
+    const BUILTIN_DICTIONARY = new Map([
+      ["白馬", "あおうま"], ["柳葉菜", "あかばな"], ["白地", "あからさま"], ["糸葱", "あさつき"],
+      ["海馬", "あしか / せいうち"], ["花鶏", "あとり"], ["海人", "あま"], ["天魚", "あまご"],
+      ["紫菜", "あまのり"], ["黄牛", "あめうし"], ["水馬", "あめんぼ"], ["香魚", "あゆ"],
+      ["虎刺", "ありどおし"], ["鶏魚", "いさき"], ["石蚕", "いさごむし"], ["大角草", "いささぐさ"],
+      ["小魚", "いさな"], ["水亀", "いしがめ"], ["石子", "いしなご"], ["竜蝦", "いせえび"],
+      ["虎杖", "いたどり"], ["鹿蹄草", "いちやくそう"], ["糸魚", "いとよ"], ["金線魚", "いとよりだい"],
+      ["金糸魚", "いとよりだい"], ["刺草", "いらくさ"], ["刺虫", "いらむし"], ["菜豆", "いんげんまめ"],
+      ["大人", "おとな / うし"], ["蕎麦葉貝母", "うばゆり"], ["竜葵", "うみほおずき"], ["狗母魚", "えそ"],
+      ["金雀児", "えにしだ"], ["狗尾草", "えのころぐさ"], ["大鼓", "おおかわ"], ["虎魚", "おこぜ"],
+      ["海狗", "おっとせい"], ["和蘭", "おらんだ"], ["馬蹄草", "かきどおし"], ["黄鶏", "かしわ"],
+      ["松魚", "かつお"], ["金糸雀", "かなりあ"], ["天牛", "かみきりむし"], ["魚狗", "かわせみ"],
+      ["水狗", "かわせみ"], ["魚虎", "かわせみ / はりせんぼん"], ["水楊", "かわやなぎ"], ["黄瓜", "きゅうり"],
+      ["雲母", "きらら"], ["布地", "きれじ"], ["金海鼠", "きんこ"], ["水鶏", "くいな"],
+      ["小角", "くだのふえ"], ["山白竹", "くまざさ"], ["水母", "くらげ"], ["黒海布", "くろめ"],
+      ["黒布", "くろめ"], ["黒菜", "くろめ"], ["紫雲英", "れんげそう"], ["金亀子", "こがねむし"],
+      ["小雀", "こがら"], ["小啄木鳥", "こげら"], ["牛尾魚", "こち"], ["小水葱", "こなぎ"],
+      ["海鼠子", "このこ"], ["小竹", "ささ"], ["大角豆", "ささげ"], ["刺亀虫", "さしがめ"],
+      ["青魚", "あおざかな / さば"], ["青花魚", "さば"], ["狗舌草", "さわおぐるま"], ["牛尾菜", "しおで"],
+      ["柳葉魚", "ししゃも"], ["青蝦", "しばえび"], ["青竜蝦", "しゃこ"], ["和人", "わじん / しゃも"],
+      ["金鐘児", "すずむし"], ["石花", "せ"], ["蕎麦", "そば"], ["蚕豆", "そらまめ"],
+      ["水豆児", "たぬきも"], ["松楊", "ちしゃのき"], ["天青地白", "ちちこぐさ"], ["草石蚕", "ちょろぎ"],
+      ["菜瓜", "つけうり"], ["黄楊", "つげ"], ["海螺", "つぶ"], ["天蚕糸", "てぐす"],
+      ["草蝦", "てながえび"], ["石花菜", "てんぐさ"], ["石竜子", "とかげ"], ["黄葵", "とろろあおい"],
+      ["香螺", "ながにし"], ["菜亀虫", "ながめ"], ["水葱", "なぎ"], ["魚子", "ななこ"],
+      ["海鼠", "なまこ"], ["黄瓜菜", "にがな"], ["螺子", "ねじ"], ["海地", "はいち"],
+      ["白楊", "はこやなぎ"], ["蝦虎魚", "はぜ"], ["金花虫", "はむし"], ["大角", "おおつの / はらのふえ"],
+      ["三白草", "はんげしょう"], ["石松", "ひかげのかずら"], ["小舌", "ひこ"], ["鹿尾菜", "ひじき"],
+      ["鹿角菜", "ひじき"], ["雲雀", "ひばり"], ["白英", "ひよどりじょうご"], ["山蘭", "ひよどりばな"],
+      ["鼓子花", "ひるがお"], ["白花菜", "ふうちょうそう"], ["蘭草", "ふじばかま"], ["天糸瓜", "へちま"],
+      ["糸瓜", "へちま"], ["竹麦魚", "ほうぼう"], ["黒子", "ほくろ"], ["木瓜", "ぼけ"],
+      ["山小菜", "ほたるぶくろ"], ["海人草", "まくり"], ["肉刺", "まめ"], ["虎子", "とらこ / まる"],
+      ["鼓虫", "みずすまし"], ["鼓豆虫", "みずすまし"], ["金線草", "みずひき"], ["角子", "みずら"],
+      ["三人", "さんにん / みたり"], ["三布", "みの"], ["海松", "みる"], ["水松", "みる"],
+      ["海松貝", "みるがい"], ["海松布", "みるめ"], ["海布", "め"], ["木蘭", "もくれん"],
+      ["水雲", "もずく"], ["海雲", "もずく"], ["黄葉", "こうよう / もみじ"], ["紫金牛", "やぶこうじ"],
+      ["山雀", "やまがら"], ["山香", "やまこうばし"], ["山魚狗", "やませみ"], ["山鼠", "やまね"],
+      ["天蚕", "やままゆ"], ["若布", "わかめ"], ["和布", "わかめ"], ["若人", "わこうど"],
+      ["山葵", "わさび"], ["海若", "わたつみ"], ["海老", "えび"], ["日本", "にほん"],
+      ["大山", "たいざん"], ["小鳥", "ことり"], ["水草", "みずくさ"], ["青葉", "あおば"],
+      ["白花", "しらはな"], ["金魚", "きんぎょ"], ["山菜", "さんさい"], ["黒馬", "こくば"],
+      ["大魚", "たいぎょ"], ["子馬", "こうま"], ["天竹", "てんちく"], ["和風", "わふう"],
+      ["赤花", "あかばな"], ["三色", "さんしょく"], ["木葉", "このは"], ["黄金", "おうごん / こがね"],
+      ["大蛇", "だいじゃ / おろち"]
     ]);
 
-    /* ================= 3. SOUND SYNTHESIS ENGINE (Web Audio API) ================= */
-    let audioCtx = null;
-    let soundEnabled = true;
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
-
-    function playSound(type) {
-      if (!soundEnabled) return;
-      initAudio();
-      if (!audioCtx) return;
-
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      if (type === 'select') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
-      } else if (type === 'deselect') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, now);
-        osc.frequency.exponentialRampToValueAtTime(300, now + 0.08);
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
-      } else if (type === 'success') {
-        // Arpeggio chime
-        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-          const o = audioCtx.createOscillator();
-          const g = audioCtx.createGain();
-          o.connect(g);
-          g.connect(audioCtx.destination);
-          o.frequency.value = freq;
-          g.gain.setValueAtTime(0.1, now + idx * 0.08);
-          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
-          o.start(now + idx * 0.08);
-          o.stop(now + idx * 0.08 + 0.3);
-        });
-      } else if (type === 'error') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.setValueAtTime(140, now + 0.1);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
-      } else if (type === 'shuffle') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(250, now);
-        osc.frequency.exponentialRampToValueAtTime(500, now + 0.15);
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
-        osc.start(now);
-        osc.stop(now + 0.15);
-      }
-    }
-
-    function toggleSound() {
-      soundEnabled = !soundEnabled;
-      const soundIcon = document.getElementById('soundIcon');
-      const soundText = document.getElementById('soundText');
-      if (soundEnabled) {
-        soundIcon.setAttribute('data-lucide', 'volume-2');
-        soundText.textContent = "音: ON";
-      } else {
-        soundIcon.setAttribute('data-lucide', 'volume-x');
-        soundText.textContent = "音: OFF";
-      }
-      lucide.createIcons();
-    }
-
-    /* ================= 4. GAME STATE MANAGEMENT ================= */
+    /* 3. GAME STATE MANAGEMENT */
     let deck = [];
-    let hand = []; // Array of objects: { id, kanji }
-    let selectedForWord = []; // Selected indices for word creation
-    let selectedForExchange = []; // Selected indices for exchange
+    let hand = [];
+    let selectedForExchange = [];
+    let selectedForWord = [];
     
-    let score = 0;
-    let round = 1;
-    const maxRounds = 5;
-    let exchangeUsedThisRound = false;
-    let gameMode = 'word'; // 'word' or 'exchange'
-    let history = []; // Words submitted history
-    let highScore = localStorage.getItem('kanji_poker_highscore') || 0;
+    let phase = 'exchange'; // 'exchange' or 'submit'
+    let exchangesRemaining = 2;
+    let currentSessionScore = 0;
+    let currentSessionWords = []; // Array of objects: { word, reading, points }
+    
+    let playHistory = JSON.parse(localStorage.getItem('kanjiholic_poker_history') || '[]');
+    let highScore = localStorage.getItem('kanjiholic_poker_highscore') || 0;
 
-    /* ================= 5. GAME ENGINE CORE LOGIC ================= */
-    
-    // Initialize Game
+    /* 4. GAME ENGINE CORE LOGIC */
     function initGame() {
-      score = 0;
-      round = 1;
-      history = [];
       deck = shuffleArray([...KANJI_DECK_MASTER]);
       hand = [];
-      exchangeUsedThisRound = false;
+      selectedForExchange = [];
+      selectedForWord = [];
+      
+      phase = 'exchange';
+      exchangesRemaining = 2;
+      currentSessionScore = 0;
+      currentSessionWords = [];
 
-      // Deal 5 cards
+      // Deal initial 5 cards
       for (let i = 0; i < 5; i++) {
         hand.push({ id: generateUniqueId(), kanji: deck.pop() });
       }
 
-      setGameMode('word');
+      renderCardListModal();
       updateUI();
-      showMessage("ゲーム開始！手札から熟語を作るか、カードを交換してください。");
+      showMessage("交換したいカードを選び「カードを交換する」を押すか、「交換せずに提出へ」で決定してください。");
     }
 
-    // Helper: Utility Shuffle (Fisher-Yates)
+    function confirmResetGame() {
+      if (confirm("現在のゲームを破棄して、はじめからやり直しますか？\n（※過去のプレイ履歴は保持されます）")) {
+        initGame();
+      }
+    }
+
     function shuffleArray(arr) {
       const array = [...arr];
       for (let i = array.length - 1; i > 0; i--) {
@@ -484,218 +408,198 @@
       return Math.random().toString(36).substr(2, 9);
     }
 
-    // Mode Switcher (Word Mode vs Exchange Mode)
-    function setGameMode(mode) {
-      if (mode === 'exchange' && exchangeUsedThisRound) {
-        showMessage("このラウンドでのカード交換は既に使用済みです。");
-        return;
-      }
-
-      gameMode = mode;
-      clearCardSelection();
-
-      const wordBtn = document.getElementById('modeWordBtn');
-      const exchangeBtn = document.getElementById('modeExchangeBtn');
-      const hintText = document.getElementById('modeHintText');
-      const primaryBtn = document.getElementById('primaryActionBtn');
-
-      if (mode === 'word') {
-        wordBtn.className = "flex-1 max-w-[200px] py-2.5 px-4 rounded-lg font-bold text-sm transition-all border flex items-center justify-center gap-2 bg-gold text-indigoDeep border-gold shadow-goldGlow";
-        exchangeBtn.className = "flex-1 max-w-[200px] py-2.5 px-4 rounded-lg font-bold text-sm transition-all border flex items-center justify-center gap-2 bg-indigoAccent text-slate-300 border-slate-600 hover:border-gold/50";
-        hintText.textContent = "熟語にする順番にカードをクリックしてください (2〜5文字)";
-        primaryBtn.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> 熟語を提出する`;
-        primaryBtn.className = "px-8 py-3 rounded-xl bg-crimson hover:bg-red-700 text-goldLight border-2 border-gold font-bold text-base shadow-crimsonGlow transition-all flex items-center gap-2 transform active:scale-95";
-      } else {
-        exchangeBtn.className = "flex-1 max-w-[200px] py-2.5 px-4 rounded-lg font-bold text-sm transition-all border flex items-center justify-center gap-2 bg-vermilion text-white border-vermilion shadow-crimsonGlow";
-        wordBtn.className = "flex-1 max-w-[200px] py-2.5 px-4 rounded-lg font-bold text-sm transition-all border flex items-center justify-center gap-2 bg-indigoAccent text-slate-300 border-slate-600 hover:border-gold/50";
-        hintText.textContent = "交換したい手札のカードを選択してください（1回のみ）";
-        primaryBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-5 h-5"></i> 選んだカードを交換する`;
-        primaryBtn.className = "px-8 py-3 rounded-xl bg-vermilion hover:bg-red-600 text-white border-2 border-goldLight font-bold text-base shadow-crimsonGlow transition-all flex items-center gap-2 transform active:scale-95";
-      }
-      lucide.createIcons();
-    }
-
-    // Handle Card Clicks
+    /* CARD CLICK HANDLER */
     function onCardClick(index) {
-      if (gameMode === 'word') {
-        const foundPos = selectedForWord.indexOf(index);
-        if (foundPos > -1) {
-          // Deselect card
-          selectedForWord.splice(foundPos, 1);
-          playSound('deselect');
-        } else {
-          // Select card
-          selectedForWord.push(index);
-          playSound('select');
-        }
-      } else {
-        // Exchange Mode
+      if (phase === 'exchange') {
         const foundPos = selectedForExchange.indexOf(index);
         if (foundPos > -1) {
           selectedForExchange.splice(foundPos, 1);
-          playSound('deselect');
         } else {
           selectedForExchange.push(index);
-          playSound('select');
+        }
+      } else {
+        // Submit Phase
+        const foundPos = selectedForWord.indexOf(index);
+        if (foundPos > -1) {
+          selectedForWord.splice(foundPos, 1);
+        } else {
+          selectedForWord.push(index);
         }
       }
       updateCardUI();
       updateSequencePreview();
     }
 
-    function clearCardSelection() {
-      selectedForWord = [];
-      selectedForExchange = [];
-      updateCardUI();
-      updateSequencePreview();
-    }
-
-    // Execute Primary Action (Submit Word OR Exchange Cards)
-    function executePrimaryAction() {
-      if (gameMode === 'word') {
-        submitWord();
-      } else {
-        exchangeSelectedCards();
-      }
-    }
-
-    /* ================= 6. WORD VALIDATION & SCORING ================= */
-    async function submitWord() {
-      if (selectedForWord.length < 2) {
-        showMessage("熟語を作るには、カードを2枚以上選択してください。");
-        playSound('error');
-        return;
-      }
-
-      const wordString = selectedForWord.map(idx => hand[idx].kanji).join('');
-      showMessage(`「${wordString}」の辞書照会中...`);
-
-      // 1. Check client-side builtin dictionary
-      let isValid = BUILTIN_DICTIONARY.has(wordString);
-
-      // 2. Fallback: Free Online Japanese Dictionary Lookup (Weblio fallback check)
-      if (!isValid) {
-        isValid = await checkOnlineDictionaryFallback(wordString);
-      }
-
-      if (isValid) {
-        // Calculate Score based on Word Length
-        const len = wordString.length;
-        let points = 0;
-        if (len === 2) points = 100;
-        else if (len === 3) points = 300;
-        else if (len === 4) points = 1000; // 4-Kanji Idiom / 四字熟語
-        else if (len >= 5) points = 3000; // Full Hand Compound
-
-        score += points;
-        playSound('success');
-
-        // Confetti effect for big scores (4+ length)
-        if (len >= 4 && typeof confetti === 'function') {
-          confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-        }
-
-        // Record History
-        history.push({ word: wordString, points: points, round: round });
-
-        showMessage(`🎉 「${wordString}」成立！ +${points}pt 獲得！`);
-
-        // Refill hand cards used
-        // Remove submitted cards sorted descending to preserve correct indices
-        const sortedIndices = [...selectedForWord].sort((a, b) => b - a);
-        sortedIndices.forEach(idx => {
-          hand.splice(idx, 1);
-        });
-
-        // Draw new cards from deck
-        while (hand.length < 5 && deck.length > 0) {
-          hand.push({ id: generateUniqueId(), kanji: deck.pop() });
-        }
-
-        clearCardSelection();
-        advanceRound();
-
-      } else {
-        playSound('error');
-        showMessage(`❌ 「${wordString}」は辞書に見つかりませんでした。別の組み合わせを試してください。`);
-      }
-    }
-
-    // Online Free Dictionary Lookup API Fallback (Completely free CORS-friendly Japanese API endpoint)
-    async function checkOnlineDictionaryFallback(word) {
-      try {
-        const response = await fetch(`https://lab.goo.ne.jp/api/morph`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            app_id: "free_client_side_lookup", // Mock fallback or public morph check
-            sentence: word
-          })
-        }).catch(() => null);
-
-        // Fallback rule heuristic: If word contains valid combination patterns, treat intelligently
-        // For standard local playability, fallback return true for 2-4 kanji if not explicitly rejected
-        return false; 
-      } catch (e) {
-        return false;
-      }
-    }
-
-    /* ================= 7. CARD EXCHANGE SYSTEM ================= */
-    function exchangeSelectedCards() {
+    /* PHASE 1: EXCHANGE CARDS */
+    function executeExchange() {
       if (selectedForExchange.length === 0) {
-        showMessage("交換するカードを1枚以上選択してください。");
-        playSound('error');
+        showMessage("交換するカードを1枚以上選択してください（交換しない場合は『交換せずに提出へ』を押してください）。");
         return;
       }
 
-      if (deck.length < selectedForExchange.length) {
-        showMessage("山札の残り枚数が足りません。");
-        playSound('error');
-        return;
-      }
-
-      playSound('shuffle');
-
-      // Replace selected cards with new ones from deck
+      // Replace selected cards
       selectedForExchange.forEach(idx => {
         hand[idx] = { id: generateUniqueId(), kanji: deck.pop() };
       });
 
-      exchangeUsedThisRound = true;
-      document.getElementById('exchangeStatusText').textContent = "使用済み";
+      exchangesRemaining--;
+      selectedForExchange = [];
 
-      showMessage(`${selectedForExchange.length}枚のカードを交換しました。`);
-      setGameMode('word');
-      updateUI();
-    }
-
-    function advanceRound() {
-      if (round < maxRounds) {
-        round++;
-        exchangeUsedThisRound = false;
-        document.getElementById('exchangeStatusText').textContent = "交換可能";
-        updateUI();
+      if (exchangesRemaining <= 0) {
+        startSubmitPhase();
       } else {
-        endGame();
+        updateUI();
+        showMessage(`カードを交換しました。残り交換回数: ${exchangesRemaining}回`);
       }
     }
 
-    function endGame() {
-      // Save High Score
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('kanji_poker_highscore', highScore);
+    function skipExchange() {
+      startSubmitPhase();
+    }
+
+    /* PHASE 2: SUBMIT WORDS */
+    function startSubmitPhase() {
+      phase = 'submit';
+      selectedForExchange = [];
+      selectedForWord = [];
+      updateUI();
+      showMessage("【熟語提出フェイズ】手札をクリックして熟語を作り「熟語を提出」を押してください。終わったら「提出を終了する」を押します。");
+    }
+
+    /* REVISED POINT SCORING SYSTEM */
+    async function submitWord() {
+      if (selectedForWord.length < 2) {
+        showMessage("熟語を作るには、カードを2枚以上選択してください。");
+        return;
+      }
+
+      const wordString = selectedForWord.map(idx => hand[idx].kanji).join('');
+      
+      // Check duplicate in current session
+      if (currentSessionWords.some(item => item.word === wordString)) {
+        showMessage(`「${wordString}」は既に提出済みです。別の熟語を作ってください。`);
+        return;
+      }
+
+      showMessage(`「${wordString}」の辞書照会中...`);
+
+      let reading = "";
+      let isValid = false;
+
+      // 1. Check Built-in Dictionary
+      if (BUILTIN_DICTIONARY.has(wordString)) {
+        isValid = true;
+        reading = BUILTIN_DICTIONARY.get(wordString);
+      } else {
+        // 2. Query Wiktionary API
+        const apiResult = await checkWiktionaryAPIWithReading(wordString);
+        if (apiResult.isValid) {
+          isValid = true;
+          reading = apiResult.reading || "よみ不詳";
+        }
+      }
+
+      if (isValid) {
+        const len = wordString.length;
+        let points = 0;
+        
+        // Revised Point Calculation Logic
+        if (len === 2) points = 100;
+        else if (len === 3) points = 500;
+        else if (len === 4) points = 1000;
+        else if (len >= 5) points = 10000;
+
+        currentSessionScore += points;
+        currentSessionWords.push({ word: wordString, reading: reading, points: points });
+
+        if (len >= 3 && typeof confetti === 'function') {
+          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        }
+
+        showMessage(`🎉 「${wordString}（${reading}）」成立！ +${points}pt 獲得！`);
+        selectedForWord = [];
+        updateUI();
+      } else {
+        showMessage(`❌ 「${wordString}」は辞書に見つかりませんでした。`);
+      }
+    }
+
+    function clearWordSelection() {
+      selectedForWord = [];
+      updateCardUI();
+      updateSequencePreview();
+    }
+
+    /* WIKTIONARY API LOOKUP WITH READING EXTRACTION */
+    async function checkWiktionaryAPIWithReading(word) {
+      try {
+        const url = `https://ja.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&prop=extracts&explaintext=true&format=json&origin=*`;
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data && data.query && data.query.pages) {
+          const pages = data.query.pages;
+          const pageId = Object.keys(pages)[0];
+          if (pageId !== "-1") {
+            const extract = pages[pageId].extract || "";
+            let reading = "";
+            const match = extract.match(/【([^】]+)】/) || extract.match(/（([ぁ-んー]+)）/);
+            if (match) {
+              reading = match[1];
+            } else {
+              reading = "辞書収載語";
+            }
+            return { isValid: true, reading: reading };
+          }
+        }
+        return { isValid: false, reading: "" };
+      } catch (error) {
+        return { isValid: false, reading: "" };
+      }
+    }
+
+    /* END GAME SESSION */
+    function finishGameSession() {
+      const sessionRecord = {
+        date: new Date().toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        score: currentSessionScore,
+        hand: hand.map(c => c.kanji),
+        words: [...currentSessionWords]
+      };
+
+      playHistory.unshift(sessionRecord);
+      if (playHistory.length > 20) playHistory.pop();
+      localStorage.setItem('kanjiholic_poker_history', JSON.stringify(playHistory));
+
+      if (currentSessionScore > highScore) {
+        highScore = currentSessionScore;
+        localStorage.setItem('kanjiholic_poker_highscore', highScore);
         document.getElementById('highScoreNotice').textContent = "🏆 自己最高記録更新！";
       } else {
         document.getElementById('highScoreNotice').textContent = `ハイスコア: ${highScore} pt`;
       }
 
-      document.getElementById('finalScoreDisplay').textContent = score.toLocaleString();
+      document.getElementById('finalScoreDisplay').textContent = currentSessionScore.toLocaleString();
+      
+      const resultListEl = document.getElementById('resultWordList');
+      if (currentSessionWords.length === 0) {
+        resultListEl.innerHTML = `<p class="text-xs text-slate-400">作成した熟語はありません。</p>`;
+      } else {
+        resultListEl.innerHTML = currentSessionWords.map(w => `
+          <div class="flex justify-between items-center text-xs p-2 rounded bg-indigoAccent/80 border border-gold/20">
+            <div>
+              <span class="font-kanji font-bold text-goldLight text-sm mr-2">${w.word}</span>
+              <span class="text-slate-400 text-[10px]">（${w.reading}）</span>
+            </div>
+            <span class="font-bold text-gold">+${w.points} pt</span>
+          </div>
+        `).join('');
+      }
+
       openModal('resultModal');
 
-      if (typeof confetti === 'function') {
-        confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+      if (currentSessionScore > 0 && typeof confetti === 'function') {
+        confetti({ particleCount: 120, spread: 90, origin: { y: 0.5 } });
       }
     }
 
@@ -704,15 +608,53 @@
       initGame();
     }
 
-    /* ================= 8. UI RENDERING ENGINE ================= */
+    /* 5. UI RENDERING ENGINE */
     function updateUI() {
-      document.getElementById('scoreDisplay').textContent = score.toLocaleString();
-      document.getElementById('roundDisplay').textContent = `${round} / ${maxRounds}`;
-      document.getElementById('deckCountDisplay').textContent = deck.length;
+      document.getElementById('scoreDisplay').textContent = currentSessionScore.toLocaleString();
       document.getElementById('highScoreModalDisplay').textContent = Number(highScore).toLocaleString();
 
+      const phaseEl = document.getElementById('phaseDisplay');
+      const exchangeCountEl = document.getElementById('exchangeCountDisplay');
+      const hintTextEl = document.getElementById('modeHintText');
+      const controlsContainer = document.getElementById('actionControlsContainer');
+
+      if (phase === 'exchange') {
+        phaseEl.textContent = "カード交換";
+        phaseEl.className = "text-lg md:text-2xl font-bold text-vermilion font-kanji";
+        exchangeCountEl.textContent = `${exchangesRemaining} 回`;
+        hintTextEl.textContent = "交換したいカードを選択してください（最大2回まで交換可能）";
+
+        controlsContainer.innerHTML = `
+          <button onclick="executeExchange()" class="px-6 py-3 rounded-xl bg-vermilion hover:bg-red-600 text-white font-bold text-sm shadow-crimsonGlow transition flex items-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i> カードを交換する
+          </button>
+          <button onclick="skipExchange()" class="px-6 py-3 rounded-xl bg-indigoAccent hover:bg-slate-700 text-gold border border-gold/40 font-bold text-sm transition flex items-center gap-2">
+            <i data-lucide="arrow-right-circle" class="w-4 h-4"></i> 交換せずに提出へ
+          </button>
+        `;
+      } else {
+        phaseEl.textContent = "熟語提出";
+        phaseEl.className = "text-lg md:text-2xl font-bold text-gold font-kanji";
+        exchangeCountEl.textContent = "完了";
+        hintTextEl.textContent = "提出する順番にカードをクリックしてください（同じカードを何度でも使用可能）";
+
+        controlsContainer.innerHTML = `
+          <button onclick="clearWordSelection()" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 font-semibold text-sm transition flex items-center gap-1.5">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 選択解除
+          </button>
+          <button onclick="submitWord()" class="px-6 py-3 rounded-xl bg-crimson hover:bg-red-700 text-goldLight border-2 border-gold font-bold text-sm shadow-crimsonGlow transition flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> 熟語を提出する
+          </button>
+          <button onclick="finishGameSession()" class="px-6 py-3 rounded-xl bg-gold hover:bg-goldLight text-indigoDeep font-extrabold text-sm shadow-goldGlow transition flex items-center gap-2">
+            <i data-lucide="check-check" class="w-4 h-4"></i> 提出を終了する
+          </button>
+        `;
+      }
+
       updateCardUI();
-      updateHistoryUI();
+      updateSequencePreview();
+      updateHistoryModalUI();
+      lucide.createIcons();
     }
 
     function updateCardUI() {
@@ -720,33 +662,31 @@
       container.innerHTML = '';
 
       hand.forEach((cardObj, idx) => {
+        const isExchangeSelected = selectedForExchange.includes(idx);
         const isWordSelected = selectedForWord.includes(idx);
         const wordSequenceBadgeIdx = selectedForWord.indexOf(idx) + 1;
-        const isExchangeSelected = selectedForExchange.includes(idx);
 
         const cardEl = document.createElement('div');
-        
-        // Apply aesthetic traditional Japanese playing card style
+
         let borderStyle = "border-gold/50";
         let cardStateClass = "";
 
-        if (isWordSelected) {
-          cardStateClass = "selected-word";
-          borderStyle = "border-gold";
-        } else if (isExchangeSelected) {
+        if (phase === 'exchange' && isExchangeSelected) {
           cardStateClass = "selected-exchange";
           borderStyle = "border-vermilion";
+        } else if (phase === 'submit' && isWordSelected) {
+          cardStateClass = "selected-word";
+          borderStyle = "border-gold";
         }
 
         cardEl.className = `kanji-card washi-texture relative w-16 sm:w-24 md:w-28 h-28 sm:h-36 md:h-44 rounded-xl border-2 ${borderStyle} shadow-card flex flex-col justify-between p-2 sm:p-3 cursor-pointer ${cardStateClass}`;
         cardEl.onclick = () => onCardClick(idx);
 
-        // Sequence badge indicator for word order
         let badgeHTML = '';
-        if (isWordSelected) {
-          badgeHTML = `<div class="absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gold text-indigoDeep font-bold text-xs sm:text-sm flex items-center justify-center border border-white shadow-md z-10 animate-bounce">${wordSequenceBadgeIdx}</div>`;
-        } else if (isExchangeSelected) {
+        if (phase === 'exchange' && isExchangeSelected) {
           badgeHTML = `<div class="absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-vermilion text-white font-bold text-xs flex items-center justify-center border border-white shadow-md z-10"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></div>`;
+        } else if (phase === 'submit' && isWordSelected) {
+          badgeHTML = `<div class="absolute -top-2 -right-2 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gold text-indigoDeep font-bold text-xs sm:text-sm flex items-center justify-center border border-white shadow-md z-10 animate-bounce">${wordSequenceBadgeIdx}</div>`;
         }
 
         cardEl.innerHTML = `
@@ -766,37 +706,60 @@
 
     function updateSequencePreview() {
       const display = document.getElementById('selectedSequenceDisplay');
-      if (gameMode === 'word') {
+      const titleLabel = document.getElementById('sequenceTitleLabel');
+
+      if (phase === 'exchange') {
+        titleLabel.textContent = "交換対象のカード:";
+        if (selectedForExchange.length === 0) {
+          display.innerHTML = `<span class="text-slate-600 text-sm font-sans italic">（交換するカードを選択してください）</span>`;
+        } else {
+          const seqText = selectedForExchange.map(i => hand[i].kanji).join(' , ');
+          display.innerHTML = `<span class="text-vermilion text-lg font-sans">交換: [ ${seqText} ]</span>`;
+        }
+      } else {
+        titleLabel.textContent = "作成中の熟語:";
         if (selectedForWord.length === 0) {
-          display.innerHTML = `<span class="text-slate-600 text-sm font-sans italic">（カードが未選択です）</span>`;
+          display.innerHTML = `<span class="text-slate-600 text-sm font-sans italic">（カードを選択してください）</span>`;
         } else {
           const seqText = selectedForWord.map(i => hand[i].kanji).join(' ');
           display.textContent = seqText;
         }
-      } else {
-        if (selectedForExchange.length === 0) {
-          display.innerHTML = `<span class="text-slate-600 text-sm font-sans italic">（交換するカードを選んでください）</span>`;
-        } else {
-          const seqText = selectedForExchange.map(i => hand[i].kanji).join(' , ');
-          display.innerHTML = `<span class="text-vermilion text-lg font-sans">交換対象: [ ${seqText} ]</span>`;
-        }
       }
     }
 
-    function updateHistoryUI() {
+    function updateHistoryModalUI() {
       const historyContainer = document.getElementById('historyList');
-      if (history.length === 0) {
-        historyContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">まだ熟語を作成していません。</p>`;
+      if (playHistory.length === 0) {
+        historyContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">まだプレイ履歴がありません。</p>`;
         return;
       }
 
-      historyContainer.innerHTML = history.map(item => `
-        <div class="flex items-center justify-between p-3 rounded-lg bg-indigoAccent/60 border border-gold/20">
-          <div>
-            <span class="text-lg font-kanji font-bold text-goldLight tracking-wider">${item.word}</span>
-            <span class="text-[10px] text-slate-400 block">Round ${item.round}</span>
+      historyContainer.innerHTML = playHistory.map((item, idx) => `
+        <div class="p-3 rounded-xl bg-indigoAccent/60 border border-gold/20 space-y-2">
+          <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/60 pb-1.5">
+            <span>第 ${playHistory.length - idx} 回プレイ (${item.date})</span>
+            <span class="font-bold text-gold text-sm">+${item.score} pt</span>
           </div>
-          <span class="text-sm font-bold text-gold bg-gold/10 px-2.5 py-1 rounded border border-gold/30">+${item.points} pt</span>
+          <div class="text-xs text-slate-300">
+            <span class="text-[10px] text-slate-400 block mb-1">確定手札: [ ${item.hand.join(' ')} ]</span>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              ${item.words.length === 0 ? '<span class="text-slate-500 italic text-[11px]">熟語なし</span>' : item.words.map(w => `
+                <span class="bg-indigoDeep/80 px-2 py-0.5 rounded border border-gold/30 text-goldLight text-[11px] font-kanji">
+                  ${w.word} <span class="text-slate-400 font-sans text-[9px]">(${w.reading})</span>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* RENDER CARD LIST MODAL GRID */
+    function renderCardListModal() {
+      const container = document.getElementById('cardGridContainer');
+      container.innerHTML = KANJI_DECK_MASTER.map(k => `
+        <div class="p-2 bg-indigoDeep/90 rounded border border-gold/30 hover:border-gold hover:text-gold transition cursor-default">
+          ${k}
         </div>
       `).join('');
     }
@@ -805,7 +768,6 @@
       document.getElementById('statusMessage').textContent = msg;
     }
 
-    /* ================= 9. MODAL CONTROLLERS ================= */
     function openModal(id) {
       document.getElementById(id).classList.remove('hidden');
     }
@@ -814,7 +776,6 @@
       document.getElementById(id).classList.add('hidden');
     }
 
-    // Initialize Application on Window Load
     window.onload = function() {
       initGame();
       lucide.createIcons();
