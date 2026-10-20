@@ -84,8 +84,9 @@
   <header class="w-full bg-indigoDeep/90 border-b border-gold/30 px-4 py-3 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-5xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <!-- KANJIHOLIC Logo Image Integration -->
-        <img src="KANJIHOLICRAVEN_logo.jpg" alt="KANJIHOLIC Logo" class="w-10 h-10 rounded-full border border-gold/50 shadow-goldGlow object-cover">
+        <!-- KANJIHOLIC Logo Image Integration (.png に修正) -->
+        <img src="KANJIHOLICRAVEN_logo.png" alt="KANJIHOLIC" class="w-10 h-10 rounded-full border border-gold/50 shadow-goldGlow object-cover" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
+        <div id="logoFallback" class="w-10 h-10 rounded-full bg-crimson border border-gold hidden items-center justify-center font-kanji text-gold font-bold text-xl shadow-goldGlow">漢</div>
         <div>
           <h1 class="text-xl md:text-2xl font-bold font-kanji tracking-wider text-goldLight flex items-center gap-2">
             漢字ポーカー
@@ -196,7 +197,7 @@
 
         <div>
           <h3 class="font-bold text-goldLight mb-1 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-gold"></span> 役と得点表（更新）
+            <span class="w-2 h-2 rounded-full bg-gold"></span> 役と得点表
           </h3>
           <div class="grid grid-cols-2 gap-2 text-xs border border-gold/20 p-2.5 rounded bg-indigoAccent/50">
             <div class="flex justify-between border-b border-slate-700 pb-1"><span>2文字熟語:</span> <span class="font-bold text-gold">100 pt</span></div>
@@ -241,7 +242,7 @@
     </div>
   </div>
 
-  <!-- 3. Card List Modal (NEW) -->
+  <!-- 3. Card List Modal -->
   <div id="cardListModal" class="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-indigoDeep border-2 border-gold rounded-2xl max-w-xl w-full p-6 text-washi shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal('cardListModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -254,7 +255,6 @@
       <p class="text-xs text-slate-400 mb-4">全70文字の山札です。文字を組み合わせて熟語を見つけ出しましょう！</p>
 
       <div id="cardGridContainer" class="grid grid-cols-7 sm:grid-cols-10 gap-2 p-3 bg-indigoAccent/50 rounded-xl border border-gold/20 text-center font-kanji font-bold text-lg text-goldLight">
-        <!-- Dynamically Populated by JS -->
       </div>
 
       <button onclick="closeModal('cardListModal')" class="mt-6 w-full py-2.5 rounded-xl bg-gold text-indigoDeep font-bold text-sm hover:bg-goldLight transition">
@@ -283,7 +283,6 @@
       <div class="mb-6 text-left">
         <h4 class="text-xs font-bold text-goldLight mb-2 border-b border-gold/20 pb-1">今回作成した熟語一覧:</h4>
         <div id="resultWordList" class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
-          <!-- Populated by JS -->
         </div>
       </div>
 
@@ -308,7 +307,7 @@
 
     /* 2. CUSTOM BUILT-IN DICTIONARY WITH READINGS (Yomi) */
     const BUILTIN_DICTIONARY = new Map([
-      ["白馬", "あおうま"], ["柳葉菜", "あかばな"], ["白地", "あからさま"], ["糸葱", "あさつき"],
+      ["香水", "こうすい"], ["白馬", "あおうま"], ["柳葉菜", "あかばな"], ["白地", "あからさま"], ["糸葱", "あさつき"],
       ["海馬", "あしか / せいうち"], ["花鶏", "あとり"], ["海人", "あま"], ["天魚", "あまご"],
       ["紫菜", "あまのり"], ["黄牛", "あめうし"], ["水馬", "あめんぼ"], ["香魚", "あゆ"],
       ["虎刺", "ありどおし"], ["鶏魚", "いさき"], ["石蚕", "いさごむし"], ["大角草", "いささぐさ"],
@@ -359,10 +358,10 @@
     let selectedForExchange = [];
     let selectedForWord = [];
     
-    let phase = 'exchange'; // 'exchange' or 'submit'
+    let phase = 'exchange';
     let exchangesRemaining = 2;
     let currentSessionScore = 0;
-    let currentSessionWords = []; // Array of objects: { word, reading, points }
+    let currentSessionWords = [];
     
     let playHistory = JSON.parse(localStorage.getItem('kanjiholic_poker_history') || '[]');
     let highScore = localStorage.getItem('kanjiholic_poker_highscore') || 0;
@@ -379,7 +378,6 @@
       currentSessionScore = 0;
       currentSessionWords = [];
 
-      // Deal initial 5 cards
       for (let i = 0; i < 5; i++) {
         hand.push({ id: generateUniqueId(), kanji: deck.pop() });
       }
@@ -408,7 +406,6 @@
       return Math.random().toString(36).substr(2, 9);
     }
 
-    /* CARD CLICK HANDLER */
     function onCardClick(index) {
       if (phase === 'exchange') {
         const foundPos = selectedForExchange.indexOf(index);
@@ -418,7 +415,6 @@
           selectedForExchange.push(index);
         }
       } else {
-        // Submit Phase
         const foundPos = selectedForWord.indexOf(index);
         if (foundPos > -1) {
           selectedForWord.splice(foundPos, 1);
@@ -430,14 +426,12 @@
       updateSequencePreview();
     }
 
-    /* PHASE 1: EXCHANGE CARDS */
     function executeExchange() {
       if (selectedForExchange.length === 0) {
         showMessage("交換するカードを1枚以上選択してください（交換しない場合は『交換せずに提出へ』を押してください）。");
         return;
       }
 
-      // Replace selected cards
       selectedForExchange.forEach(idx => {
         hand[idx] = { id: generateUniqueId(), kanji: deck.pop() };
       });
@@ -457,7 +451,6 @@
       startSubmitPhase();
     }
 
-    /* PHASE 2: SUBMIT WORDS */
     function startSubmitPhase() {
       phase = 'submit';
       selectedForExchange = [];
@@ -466,7 +459,6 @@
       showMessage("【熟語提出フェイズ】手札をクリックして熟語を作り「熟語を提出」を押してください。終わったら「提出を終了する」を押します。");
     }
 
-    /* REVISED POINT SCORING SYSTEM */
     async function submitWord() {
       if (selectedForWord.length < 2) {
         showMessage("熟語を作るには、カードを2枚以上選択してください。");
@@ -475,7 +467,6 @@
 
       const wordString = selectedForWord.map(idx => hand[idx].kanji).join('');
       
-      // Check duplicate in current session
       if (currentSessionWords.some(item => item.word === wordString)) {
         showMessage(`「${wordString}」は既に提出済みです。別の熟語を作ってください。`);
         return;
@@ -486,12 +477,10 @@
       let reading = "";
       let isValid = false;
 
-      // 1. Check Built-in Dictionary
       if (BUILTIN_DICTIONARY.has(wordString)) {
         isValid = true;
         reading = BUILTIN_DICTIONARY.get(wordString);
       } else {
-        // 2. Query Wiktionary API
         const apiResult = await checkWiktionaryAPIWithReading(wordString);
         if (apiResult.isValid) {
           isValid = true;
@@ -503,7 +492,6 @@
         const len = wordString.length;
         let points = 0;
         
-        // Revised Point Calculation Logic
         if (len === 2) points = 100;
         else if (len === 3) points = 500;
         else if (len === 4) points = 1000;
@@ -530,7 +518,6 @@
       updateSequencePreview();
     }
 
-    /* WIKTIONARY API LOOKUP WITH READING EXTRACTION */
     async function checkWiktionaryAPIWithReading(word) {
       try {
         const url = `https://ja.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&prop=extracts&explaintext=true&format=json&origin=*`;
@@ -543,7 +530,7 @@
           if (pageId !== "-1") {
             const extract = pages[pageId].extract || "";
             let reading = "";
-            const match = extract.match(/【([^】]+)】/) || extract.match(/（([ぁ-んー]+)）/);
+            const match = extract.match(/【([^】]+)】/) || extract.match(/（([ぁ-んー]+)）/) || extract.match(/読み[：:]\s*([ぁ-んー]+)/);
             if (match) {
               reading = match[1];
             } else {
@@ -558,7 +545,6 @@
       }
     }
 
-    /* END GAME SESSION */
     function finishGameSession() {
       const sessionRecord = {
         date: new Date().toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -754,7 +740,6 @@
       `).join('');
     }
 
-    /* RENDER CARD LIST MODAL GRID */
     function renderCardListModal() {
       const container = document.getElementById('cardGridContainer');
       container.innerHTML = KANJI_DECK_MASTER.map(k => `
